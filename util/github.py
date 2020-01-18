@@ -29,6 +29,8 @@ def has_new_update():
         response = requests.get('https://api.github.com/repos/' + repo_name + '/commits')
         data = json.loads(response.text)[0]
         return data["sha"] != sha, data["sha"]
+    else:
+        return False, "-1"
 
 
 def pull_repo() -> bool:
