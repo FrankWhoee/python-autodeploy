@@ -34,3 +34,4 @@ while True:
     except KeyboardInterrupt:
         print("Ending process...")
         kill_app()
+        break
