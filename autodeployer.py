@@ -35,4 +35,4 @@ while True:
         print("autodeploy[ " + config['repo'] + "]: Restarting app...")
         restart_app()
         print("autodeploy[ " + config['repo'] + "]: App is running...")
-    time.sleep(300)
+    time.sleep(600)

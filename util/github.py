@@ -17,10 +17,18 @@ api_url = origin.refs
 config = yaml.load(open("autodeploy.conf"))
 repo_name = config['repo']
 
+
+def remaining_rate() -> int:
+    response = requests.get('https://api.github.com/rate_limit')
+    data = json.loads(response.text)
+    return data["rate"]["remaining"]
+
+
 def has_new_update():
-    response = requests.get('https://api.github.com/repos/'+repo_name+'/commits')
-    data = json.loads(response.text)[0]
-    return data["sha"] != sha, data["sha"]
+    if remaining_rate() > 3:
+        response = requests.get('https://api.github.com/repos/' + repo_name + '/commits')
+        data = json.loads(response.text)[0]
+        return data["sha"] != sha, data["sha"]
 
 
 def pull_repo() -> bool:
