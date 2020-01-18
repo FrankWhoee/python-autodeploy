@@ -1,2 +1,2 @@
-cd autodeploy
+cd python-autodeploy
 git pull

@@ -1,1 +1,1 @@
-python3 autodeploy/autodeployer.py
+python3 python-autodeploy/autodeployer.py
