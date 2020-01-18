@@ -1,0 +1,2 @@
+git clone https://github.com/FrankWhoee/python-autodeploy.git
+mv -r autodeploy/*-autodeploy ..

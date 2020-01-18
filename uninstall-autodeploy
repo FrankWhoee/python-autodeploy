@@ -1,0 +1,3 @@
+rm -rf autodeploy
+rm run-autodeploy
+rm update-autodeploy
