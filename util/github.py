@@ -18,9 +18,9 @@ def has_new_update():
     return data["sha"] != sha, data["sha"]
 
 
-def pull_repo():
-    is_new,sha = has_new_update()
+def pull_repo() -> bool:
+    is_new, sha = has_new_update()
     if is_new:
         origin.pull()
-        session.set("sha",sha)
-
+        session.set("sha", sha)
+    return is_new
