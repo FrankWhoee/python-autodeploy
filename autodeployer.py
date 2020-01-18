@@ -19,14 +19,17 @@ def kill_app():
     global p
     p.kill()
 
-
-while True:
-    try:
-        if github.pull_repo():
-            print("autodeploy[ " + config['repo'] + "]: New commit found. Repository updated.")
-            print("autodeploy[ " + config['repo'] + "]: Restarting app...")
-            restart_app()
-            print("autodeploy[ " + config['repo'] + "]: App is running...")
-        time.sleep(300)
-    except:
-        kill_app()
+try:
+    while True:
+        try:
+            if github.pull_repo():
+                print("autodeploy[ " + config['repo'] + "]: New commit found. Repository updated.")
+                print("autodeploy[ " + config['repo'] + "]: Restarting app...")
+                restart_app()
+                print("autodeploy[ " + config['repo'] + "]: App is running...")
+            time.sleep(300)
+        except:
+            kill_app()
+except KeyboardInterrupt:
+    print("Ending process...")
+    kill_app()
