@@ -30,17 +30,9 @@ def kill_app():
 signal(SIGINT, handler)
 
 while True:
-    try:
-        try:
-            if github.pull_repo():
-                print("autodeploy[ " + config['repo'] + "]: New commit found. Repository updated.")
-                print("autodeploy[ " + config['repo'] + "]: Restarting app...")
-                restart_app()
-                print("autodeploy[ " + config['repo'] + "]: App is running...")
-            time.sleep(300)
-        except:
-            kill_app()
-    except KeyboardInterrupt:
-        print("Ending process...")
-        kill_app()
-        sys.exit()
+    if github.pull_repo():
+        print("autodeploy[ " + config['repo'] + "]: New commit found. Repository updated.")
+        print("autodeploy[ " + config['repo'] + "]: Restarting app...")
+        restart_app()
+        print("autodeploy[ " + config['repo'] + "]: App is running...")
+    time.sleep(300)
