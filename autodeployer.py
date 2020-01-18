@@ -2,7 +2,7 @@ from util import github
 import time
 import subprocess
 import yaml
-
+import sys
 github.pull_repo()
 config = yaml.load(open("autodeploy.conf"))
 
@@ -34,4 +34,4 @@ while True:
     except KeyboardInterrupt:
         print("Ending process...")
         kill_app()
-        break
+        sys.exit()
