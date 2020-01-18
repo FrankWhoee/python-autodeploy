@@ -1,3 +1,3 @@
 from util import github
 
-print(github.has_new_update())
+github.pull_repo()

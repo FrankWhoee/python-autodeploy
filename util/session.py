@@ -3,11 +3,11 @@ import os
 
 Session = {}
 
-if os.path.exists("../session.json"):
-    with open('../session.json') as json_file:
+if os.path.exists("session.json"):
+    with open('session.json') as json_file:
         Session = json.load(json_file)
 else:
-    f = open("../session.json", "w")
+    f = open("session.json", "w")
     f.write("{}")
     f.close()
 
@@ -18,3 +18,6 @@ def get(property):
     else:
         Session[property] = -1
         return -1
+
+def set(property, value):
+    Session[property] = value

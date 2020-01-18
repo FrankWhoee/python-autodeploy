@@ -1,2 +1,5 @@
 venv
 .idea
+session.json
+util/__pycache__
+__pycache__
