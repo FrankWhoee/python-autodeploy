@@ -2,11 +2,19 @@ from util import github
 import time
 import subprocess
 import yaml
-import sys
+from signal import signal, SIGINT
+from sys import exit
+
 github.pull_repo()
 config = yaml.load(open("autodeploy.conf"))
 
 p = subprocess.Popen("exec " + "python " + config['run'], stdout=subprocess.PIPE, shell=True)
+
+
+def handler(signal_received, frame):
+    # Handle any cleanup here
+    print('SIGINT or CTRL-C detected. Exiting gracefully')
+    exit(0)
 
 
 def restart_app():
@@ -19,6 +27,7 @@ def kill_app():
     global p
     p.kill()
 
+signal(SIGINT, handler)
 
 while True:
     try:
