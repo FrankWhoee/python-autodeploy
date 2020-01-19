@@ -28,6 +28,7 @@ def kill_app():
     global p
     p.kill()
 
+
 signal(SIGINT, handler)
 
 while True:
