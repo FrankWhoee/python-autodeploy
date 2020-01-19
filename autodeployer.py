@@ -6,28 +6,36 @@ import yaml
 from signal import signal, SIGINT
 from sys import exit
 
+p = None
+
+
+def start_app():
+    global p
+    p = subprocess.Popen("exec " + "pip install -r requirements.txt", stdout=subprocess.PIPE, shell=True)
+    p = subprocess.Popen("exec " + "python " + config['run'], stdout=subprocess.PIPE, shell=True)
+    if 'export' in config:
+        p = subprocess.Popen("exec " + "source " + config['export'], stdout=subprocess.PIPE, shell=True)
+
+
+def restart_app():
+    kill_app()
+    start_app()
+
+
+def kill_app():
+    global p
+    p.kill()
+
+
 github.pull_repo()
 config = yaml.load(open("autodeploy.conf"))
-p = subprocess.Popen("exec " + "pip install -r requirements.txt", stdout=subprocess.PIPE, shell=True)
-p = subprocess.Popen("exec " + "python " + config['run'], stdout=subprocess.PIPE, shell=True)
+start_app()
 
 
 def handler(signal_received, frame):
     # Handle any cleanup here
     print('SIGINT or CTRL-C detected. Exiting gracefully')
     exit(0)
-
-
-def restart_app():
-    global p
-    p.kill()
-    p = subprocess.Popen("exec " + "pip install -r requirements.txt", stdout=subprocess.PIPE, shell=True)
-    p = subprocess.Popen("exec " + "python " + config['run'], stdout=subprocess.PIPE, shell=True)
-
-
-def kill_app():
-    global p
-    p.kill()
 
 
 signal(SIGINT, handler)
