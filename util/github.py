@@ -27,12 +27,14 @@ def has_new_update():
     if remaining_rate() > 3:
         response = requests.get('https://api.github.com/repos/' + repo_name + '/commits')
         data = json.loads(response.text)[0]
-        return data["sha"] != sha, data["sha"]
+        result = data["sha"] != sha, data["sha"]
+        return result
     else:
         return False, "-1"
 
 
 def pull_repo() -> bool:
+    global sha
     is_new, sha = has_new_update()
     if is_new:
         origin.pull()
