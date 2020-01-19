@@ -7,6 +7,7 @@ from signal import signal, SIGINT
 from sys import exit
 
 p = None
+print("Running current working directory in " + str(os.getcwd()))
 
 def shell_source(script):
     """Sometime you want to emulate the action of "source" in bash,
