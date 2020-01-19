@@ -20,6 +20,7 @@ def handler(signal_received, frame):
 def restart_app():
     global p
     p.kill()
+    p = subprocess.Popen("exec " + "pip install -r requirements.txt", stdout=subprocess.PIPE, shell=True)
     p = subprocess.Popen("exec " + "python " + config['run'], stdout=subprocess.PIPE, shell=True)
 
 

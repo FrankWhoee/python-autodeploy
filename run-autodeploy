@@ -1,1 +1,2 @@
+sh ./update-autodeploy
 python3 python-autodeploy/autodeployer.py
