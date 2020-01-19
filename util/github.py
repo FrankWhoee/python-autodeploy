@@ -3,7 +3,6 @@ import json
 import requests
 import yaml
 from git import Repo
-
 from util import session
 
 # Loads previous commit SHA if it exists within Session
