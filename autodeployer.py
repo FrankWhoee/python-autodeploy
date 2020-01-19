@@ -7,7 +7,7 @@ from sys import exit
 
 github.pull_repo()
 config = yaml.load(open("autodeploy.conf"))
-
+p = subprocess.Popen("exec " + "pip install -r requirements.txt", stdout=subprocess.PIPE, shell=True)
 p = subprocess.Popen("exec " + "python " + config['run'], stdout=subprocess.PIPE, shell=True)
 
 
