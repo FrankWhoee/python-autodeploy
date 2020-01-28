@@ -25,7 +25,8 @@ def remaining_rate() -> int:
 
 def has_new_update():
     if remaining_rate() > 3:
-        response = requests.get('https://api.github.com/repos/' + repo_name + '/commits')
+        url = 'https://api.github.com/repos/' + repo_name + '/commits' + ('?branch=' + config['branch'] if 'branch' in config else '')
+        response = requests.get(url)
         data = json.loads(response.text)[0]
         result = data["sha"] != sha, data["sha"]
         return result
