@@ -43,4 +43,4 @@ while True:
         print("autodeploy[ " + config['repo'] + "]: Restarting app...")
         restart_app()
         print("autodeploy[ " + config['repo'] + "]: App is running...")
-    time.sleep(600)
+    time.sleep(int(config['period']) if 'period' in config else 600)
