@@ -32,7 +32,7 @@ def has_new_update():
         result = data["node_id"] != node_id, data["node_id"]
         print("autodeploy[" + config['repo'] + "]: Current node_id: " + str(node_id))
         print("autodeploy[" + config['repo'] + "]: New node_id: " + str(data["node_id"]))
-        if not result:
+        if not result[0]:
             print("autodeploy[" + config['repo'] + "]: Printing response from GitHub:")
             print(data)
         return result
