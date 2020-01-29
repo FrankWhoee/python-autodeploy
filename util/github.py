@@ -26,10 +26,11 @@ def remaining_rate() -> int:
 def has_new_update():
     if remaining_rate() > 3:
         url = 'https://api.github.com/repos/' + repo_name + '/commits' + ('?sha=' + str(config['branch']) if 'branch' in config else '')
+        print("autodeploy[" + config['repo'] + "]: Checking URL: " + url)
         response = requests.get(url)
         data = json.loads(response.text)[0]
         result = data["node_id"] != node_id, data["node_id"]
-        print("autodeploy[ " + config['repo'] + "]: Current node_id: " + str(node_id))
+        print("autodeploy[" + config['repo'] + "]: Current node_id: " + str(node_id))
         if not result:
             print("autodeploy[" + config['repo'] + "]: Printing response from GitHub:")
             print(data)
