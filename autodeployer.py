@@ -39,10 +39,10 @@ signal(SIGINT, handler)
 
 while True:
     if github.pull_repo():
-        print("autodeploy[ " + config['repo'] + "]: New commit found. Repository updated.")
-        print("autodeploy[ " + config['repo'] + "]: Restarting app...")
+        print("autodeploy[" + config['repo'] + "]: New commit found. Repository updated.")
+        print("autodeploy[" + config['repo'] + "]: Restarting app...")
         restart_app()
-        print("autodeploy[ " + config['repo'] + "]: App is running...")
+        print("autodeploy[" + config['repo'] + "]: App is running...")
     else:
-        print("autodeploy[ " + config['repo'] + "]:No update found. Skipping pull...")
+        print("autodeploy[" + config['repo'] + "]: No update found. Skipping pull...")
     time.sleep(int(config['period']) if 'period' in config else 600)

@@ -5,8 +5,8 @@ import yaml
 from git import Repo
 from util import session
 
-# Loads previous commit SHA if it exists within Session
-sha = session.get("sha")
+# Loads previous commit node_id if it exists within Session
+node_id = session.get("node_id")
 
 repo = Repo("")
 assert not repo.bare
@@ -25,13 +25,13 @@ def remaining_rate() -> int:
 
 def has_new_update():
     if remaining_rate() > 3:
-        url = 'https://api.github.com/repos/' + repo_name + '/commits' + ('?branch=' + config['branch'] if 'branch' in config else '')
+        url = 'https://api.github.com/repos/' + repo_name + '/commits' + ('?sha=' + config['branch'] if 'branch' in config else '')
         response = requests.get(url)
         data = json.loads(response.text)[0]
-        result = data["sha"] != sha, data["sha"]
-        print("autodeploy[ " + config['repo'] + "]: Current SHA: " + sha)
+        result = data["node_id"] != node_id, data["node_id"]
+        print("autodeploy[ " + config['repo'] + "]: Current node_id: " + node_id)
         if not result:
-            print("autodeploy[ " + config['repo'] + "]: Printing response from GitHub:")
+            print("autodeploy[" + config['repo'] + "]: Printing response from GitHub:")
             print(data)
         return result
     else:
@@ -39,9 +39,9 @@ def has_new_update():
 
 
 def pull_repo() -> bool:
-    global sha
-    is_new, sha = has_new_update()
+    global node_id
+    is_new, node_id = has_new_update()
     if is_new:
         origin.pull()
-        session.set("sha", sha)
+        session.set("node_id", node_id)
     return is_new
