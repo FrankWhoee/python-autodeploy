@@ -29,6 +29,10 @@ def has_new_update():
         response = requests.get(url)
         data = json.loads(response.text)[0]
         result = data["sha"] != sha, data["sha"]
+        print("autodeploy[ " + config['repo'] + "]: Current SHA: " + sha)
+        if not result:
+            print("autodeploy[ " + config['repo'] + "]: Printing response from GitHub:")
+            print(data)
         return result
     else:
         return False, "-1"
