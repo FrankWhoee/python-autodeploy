@@ -30,11 +30,6 @@ def has_new_update():
         response = requests.get(url)
         data = json.loads(response.text)[0]
         result = data["node_id"] != node_id, data["node_id"]
-        print("autodeploy[" + config['repo'] + "]: Current node_id: " + str(node_id))
-        print("autodeploy[" + config['repo'] + "]: New node_id: " + str(data["node_id"]))
-        if not result[0]:
-            print("autodeploy[" + config['repo'] + "]: Printing response from GitHub:")
-            print(data)
         return result
     else:
         return False, "-1"
