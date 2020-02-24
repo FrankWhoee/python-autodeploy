@@ -9,14 +9,24 @@ from flask import Flask
 import threading
 import json
 
-global next_deployment
+global next_check
 
 app = Flask(__name__)
 
+
 @app.route('/next')
-def next_deployment():
+def next_check():
     data = {
-        'next_deployment': next_deployment
+        'next_check': next_check
+    }
+    return json.dumps(data)
+
+
+@app.route('/history')
+def deployment_history():
+    h = session.get("deployment_history", create_new_if_empty=1, new_value=[])
+    data = {
+        'deployment_history': h
     }
     return json.dumps(data)
 
@@ -49,28 +59,40 @@ class deployment(threading.Thread):
     def run(self):
         print("autodeploy[" + config['repo'] + "]: Autodeploy is now on.")
         while True:
-            if github.pull_repo():
-                log("New commit found. Repository has been updated and the app is being restarted.")
+            is_new, node_id = github.pull_repo()
+            if is_new:
+                log("New commit found. Repository has been updated and the app is being restarted.", metadata={
+                    "node_id" : node_id,
+                    "event":"new_commit"
+                })
                 print("autodeploy[" + config['repo'] + "]: New commit found. Repository updated.")
                 print("autodeploy[" + config['repo'] + "]: Restarting app...")
                 restart_app()
                 print("autodeploy[" + config['repo'] + "]: App is running...")
-                log("App was succesfully restarted.")
+                log("App was succesfully restarted.", metadata={
+                    "event":"redeploy_complete"
+                })
             else:
                 print("autodeploy[" + config['repo'] + "]: No update found. Skipping pull...")
-                log("No new commits found. Pull has been skipped.")
-            global next_deployment
+                log("No new commits found. Pull has been skipped. nodeid["+node_id+"]", metadata={
+                    "node_id" : node_id,
+                    "event":"no_new_commit"
+                })
+            global next_check
             delay = int(config['period']) if 'period' in config else 600
-            next_deployment = int(time.time()) + delay
+            next_check = int(time.time()) + delay
             time.sleep(delay)
 
-def log(message: str):
+
+def log(message: str, metadata: dict = {}):
     history: list = session.get("deployment_history", create_new_if_empty=1, new_value=[])
     history.append({
         "time": int(time.time()),
-        "log": message
+        "log": message,
+        "meta": metadata
     })
     session.set("deployment_history", history)
+
 
 github.pull_repo()
 config = yaml.load(open("autodeploy.conf"))
@@ -86,9 +108,12 @@ def handler(signal_received, frame):
 
 
 if __name__ == '__main__' and 'api-port' in config:
-    log("Starting app for the first time in this session. Autodeploy version " + meta['version'])
+    log("Starting app for the first time in this session. Autodeploy version " + meta['version'], metadata={
+                    "version" : meta['version'],
+                    "event":"initial_deploy"
+                })
     d.start()
-    app.run(host='0.0.0.0', port=config['api-port'])
+    app.run(host='0.0.0.0', port=config['api-port'], debug=True)
 else:
     d.start()
 

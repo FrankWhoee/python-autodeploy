@@ -35,10 +35,10 @@ def has_new_update():
         return False, "-1"
 
 
-def pull_repo() -> bool:
+def pull_repo() -> (bool,str):
     global node_id
     is_new, node_id = has_new_update()
     if is_new:
         origin.pull()
         session.set("node_id", node_id)
-    return is_new
+    return is_new,node_id
