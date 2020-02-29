@@ -36,8 +36,9 @@ print("Running current working directory in " + str(os.getcwd()))
 
 
 def start_app():
+    print("autodeploy[" + config['repo'] + "]: Starting app...")
     global p
-    p = subprocess.Popen("exec " + "pip install -r requirements.txt", stdout=subprocess.PIPE, shell=True)
+    subprocess.Popen("exec " + "pip install -r requirements.txt", stdout=subprocess.PIPE, shell=True)
     p = subprocess.Popen("exec " + "python " + config['run'], stdout=subprocess.PIPE, shell=True)
 
 
@@ -106,15 +107,22 @@ def handler(signal_received, frame):
     print('SIGINT or CTRL-C detected. Exiting gracefully')
     exit(0)
 
-
-if __name__ == '__main__' and 'api-port' in config:
-    log("Starting app for the first time in this session. Autodeploy version " + meta['version'], metadata={
+log("Starting app for the first time in this session. Autodeploy version " + meta['version'], metadata={
                     "version" : meta['version'],
                     "event":"initial_deploy"
                 })
+try:
     d.start()
-    app.run(host='0.0.0.0', port=config['api-port'], debug=True)
-else:
-    d.start()
+    if __name__ == '__main__' and 'api-port' in config:
+        app.run(host='0.0.0.0', port=config['api-port'])
+    log("Startup succesful.", metadata={
+        "version": meta['version'],
+        "event": "initial_deploy_success"
+    })
+except:
+    log("Startup failed.", metadata={
+        "version": meta['version'],
+        "event": "initial_deploy_fail"
+    })
 
 signal(SIGINT, handler)
