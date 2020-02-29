@@ -21,6 +21,7 @@ def get(property, create_new_if_empty=0, new_value=-1):
         return -1
     elif create_new_if_empty == 1:
         set(property,new_value)
+        return Session[property]
     else:
         raise ValueError("create_new_if_empty can only be 1 or 0. If 1 is used, a new property will be created, if 0 is used, no new property is created. Default value is 0.")
 
