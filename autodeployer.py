@@ -8,6 +8,7 @@ from sys import exit
 from flask import Flask
 import threading
 import json
+import traceback
 
 global next_check
 
@@ -119,8 +120,9 @@ try:
         "version": meta['version'],
         "event": "initial_deploy_success"
     })
-except:
+except Exception as E:
     log("Startup failed.", metadata={
+        "error": traceback.format_exc(),
         "version": meta['version'],
         "event": "initial_deploy_fail"
     })
